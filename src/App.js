@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./App.css";
 
 const initialItems = [
@@ -22,10 +23,55 @@ function Logo() {
   return <h1>🌴 Far away 💼</h1>;
 }
 function Form() {
+  const [description, setDescription] = useState("");
+  const [option, setOption] = useState(1);
+
+  function handleSubmit(e) {
+    e.preventDefault();
+    console.log(e);
+
+    if (!description) return;
+    const newItem = { description, option, packed: false, id: Date.now() };
+    console.log(newItem);
+
+    setDescription("");
+    setOption(1);
+  }
+
   return (
-    <div className="add-form">
+    <form
+      className="add-form"
+      onSubmit={handleSubmit} /* this way the enter key also works*/
+    >
+      />
       <h3>What do you need for your 😍 trip?</h3>
-    </div>
+      <select
+        value={option}
+        onChange={(e) => {
+          console.log(e.target.value);
+          setOption(Number(e.target.value));
+        }}
+      >
+        {Array.from({ length: 20 }, (_, i) => i + 1).map((num) => (
+          <option value={num} key={num}>
+            {num}
+          </option>
+        ))}
+      </select>
+      <input
+        type="text"
+        placeholder="item.."
+        //below is the controlled element
+        value={description}
+        onChange={(e) => {
+          console.log(e);
+          console.log(e.target);
+          console.log(e.target.value);
+          setDescription(e.target.value);
+        }}
+      />
+      <button>ADD</button>
+    </form>
   );
 }
 function PackingList() {
@@ -33,7 +79,7 @@ function PackingList() {
     <div className="list">
       <ul>
         {initialItems.map((item) => (
-          <Item item={item} />
+          <Item item={item} key={item.id} />
         ))}
       </ul>
     </div>
